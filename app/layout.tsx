@@ -2,14 +2,25 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+import localFont from "next/font/local";
+
+const caveat = localFont({
+  src: "../public/fonts/Caveat-VariableFont_wght.ttf",
+  variable: "--font-caveat",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const intro = localFont({
+  src: "../public/fonts/Intro-Regular-Alt.woff2",
+  variable: "--font-intro",
+  display: "swap",
+});
+
+
+const jura = localFont({
+  src: "../public/fonts/Jura-VariableFont_wght.ttf",
+  variable: "--font-jura",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -23,10 +34,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="uk">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+        className={`
+          ${caveat.variable}
+          ${intro.variable}
+          ${jura.variable}
+          antialiased
+          `}
+        >
         {children}
       </body>
     </html>

@@ -1,65 +1,238 @@
-import Image from "next/image";
+"use client";
+import styles from "../app/home.module.css";
+import { useState, useEffect } from "react";
+
+type FormErrors = {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  telegram?: string;
+  api?: string;
+};
 
 export default function Home() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <div className="container">
+        <div className={styles.header}>
+          <div className={styles.containerElemAtHeader}>
+            <p className={styles.textAtHeaderApper}>26 лютого</p>
+            <p className={styles.textAtHeader}>Живий вебінар</p>
+          </div>
+
+          <div className={styles.containerElemAtHeader}>
+            <p className={styles.textAtHeaderApper}>18:00</p>
+            <p className={styles.textAtHeader}>за Києвом</p>
+          </div>
+
+          <div className={styles.containerElemAtHeader}>
+            <p className={styles.textAtHeaderApper}>Безкоштовно</p>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <h1 className={styles.mainText}>
+          Чому <span className={styles.highlight}>90%</span> новачків у контенті не  
+          заробляють і як вийти на свої 1000$ 
+          за <span className={styles.highlight2}>2 місяці</span>
+        </h1>
+
+        <div className={styles.webinarBlock}>
+          <p className={styles.webinarIntro}>Цей вебінар для тебе, якщо:</p>
+          <ul className={styles.webinarList}>
+            <li className={styles.webinarListElem}><span className={styles.boldIntro}>ти хочеш</span>заробляти на контенті, але не розумієш, з чого почати</li>
+            <li className={styles.webinarListElem}><span className={styles.boldIntro}>ти вже щось знімаєш,</span> але грошей з цього немає</li>
+            <li className={styles.webinarListElem}><span className={styles.boldIntro}>ти боїшся</span>писати брендам і називати ціну</li>
+            <li className={styles.webinarListElem}><span className={styles.boldIntro}>ти думаєш,</span> що без великої аудиторії в контенті немає грошей</li>
+            <li className={styles.webinarListElem}><span className={styles.boldIntro}>ти втомилась</span> від безкоштовних тестових і «давайте спробуємо»</li>
+          </ul>
         </div>
-      </main>
-    </div>
+
+        <div className={styles.subButtonContainer}>
+          <button className={styles.subButton} onClick={() => setIsOpen(true)}>
+            ЗАРЕЄСТРУВАТИСЯ БЕЗКОШТОВНО
+          </button>
+        </div>
+
+        {isOpen && (
+          <div className="container">
+            <div className={styles.modalOverlay}>
+              <div className={styles.modal}>
+                <h2 className={styles.modalTitle}>Заповни дані</h2>
+
+                <form
+                  className={styles.form}
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    setErrors({});
+                    setLoading(true);
+
+                    const formData = new FormData(e.target);
+
+                    const data = {
+                      firstName: String(formData.get("firstName") ?? "").trim(),
+                      lastName: String(formData.get("lastName") ?? "").trim(),
+                      phone: String(formData.get("phone") ?? "").trim(),
+                      telegram: String(formData.get("telegram") ?? "").trim(),
+                    };
+
+                    const newErrors: FormErrors = {};
+
+                    if (!/^[А-Яа-яA-Za-zЇїІіЄєҐґ']{2,}$/.test(data.firstName)) {
+                      newErrors.firstName = "Введіть коректне ім’я";
+                    }
+
+                    if (!/^[А-Яа-яA-Za-zЇїІіЄєҐґ']{2,}$/.test(data.lastName)) {
+                      newErrors.lastName = "Введіть коректне прізвище";
+                    }
+
+                    if (!/^(\+380\d{9}|0\d{9})$/.test(data.phone)) {
+                      newErrors.phone = "Формат: +380XXXXXXXXX або 0XXXXXXXXX";
+                    }
+
+                    if (!/^@[a-zA-Z0-9_]{4,}$/.test(data.telegram)) {
+                      newErrors.telegram = "Telegram має починатися з @";
+                    }
+
+                    if (Object.keys(newErrors).length > 0) {
+                      setErrors(newErrors);
+                      setLoading(false);
+                      return;
+                    }
+
+                    try {
+                      const res = await fetch("https://script.google.com/macros/s/AKfycbxgc6CVDRlKBYBlAh2IA7DQ8VAk4Jtt5QRoPAiv-6YWM16rhiDMPauwdBlKXRyo4D0qJg/exec", {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data),
+                      });
+
+                    } catch (err) {
+                      setErrors({ api: "Помилка збереження. Спробуйте ще раз." });
+                      setLoading(false);
+                    }
+                  }}
+                >
+                  <input name="firstName" placeholder="Ім’я" />
+                  {errors.firstName && <span className={styles.error}>{errors.firstName}</span>}
+
+                  <input name="lastName" placeholder="Прізвище" />
+                  {errors.lastName && <span className={styles.error}>{errors.lastName}</span>}
+
+                  <input name="phone" placeholder="Номер телефону" />
+                  {errors.phone && <span className={styles.error}>{errors.phone}</span>}
+
+                  <input name="telegram" placeholder="Telegram (@username)" />
+                  {errors.telegram && <span className={styles.error}>{errors.telegram}</span>}
+
+                  {errors.api && <span className={styles.error}>{errors.api}</span>}
+
+                  <button type="submit" className={styles.subButton} disabled={loading}>
+                    {loading ? "ЗБЕРЕЖЕННЯ..." : "ПЕРЕЙТИ В TELEGRAM"}
+                  </button>
+                </form>
+
+                <button
+                  className={styles.closeBtn}
+                  onClick={() => setIsOpen(false)}
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className={styles.personPhotoContainer}>
+          <div className={styles.personPhotoAtRight}>
+            <div className={styles.glowCircle}></div>
+
+            <img src="/disco-ball.png" alt="disco ball" className={styles.ball} />
+
+
+            <img src="/heart.png" alt="heart" className={styles.heart} />
+
+            <img src="/person.png" alt="person" className={styles.person} />
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.newBackgroundSection}>
+        <div className={styles.contentInside}>
+          <h2 className={styles.sectionTitle}>На вебінарі<br /> ми розберемо:</h2>
+          <ul className={styles.topicList}>
+            <li>
+              <strong>Чому контент ≠ блогінг</strong><br />
+              І як заробляють ті, у кого 300–500 підписників
+            </li>
+            <li>
+              <strong>Які навички реально продаються</strong><br />
+              Зйомка, монтаж, UGC, брендовий контент — що обрати новачку
+            </li>
+            <li>
+              <strong>Де новачки зливають час і гроші</strong><br />
+              І як не зависнути в «я вчуся, але не заробляю»
+            </li>
+            <li>
+              <strong>Реальний шлях до перших 1000$</strong><br />
+              Не за пів року, а за 2 місяці — по кроках
+            </li>
+          </ul>
+        </div>
+      
+        <div className={styles.subButtonContainer}>
+          <button className={styles.subButton} onClick={() => setIsOpen(true)}>
+            ЗАРЕЄСТРУВАТИСЯ БЕЗКОШТОВНО
+          </button>
+        </div>
+       
+      </div>  
+
+      <div className="container">
+        <div className={styles.afterWebinarBlock}>
+          <h3 className={styles.afterWebinarTitle}>
+            Після вебінару в тебе в голові з’явиться чітка картинка:
+          </h3>
+
+          <div className={`${styles.afterItem} ${styles.item1}`}>
+            Як реально заробляють контент-мейкери
+          </div>
+
+          <div className={`${styles.afterItem} ${styles.item2}`}>
+            За що платять бренди, а за що ні
+          </div>
+
+          <div className={`${styles.afterItem} ${styles.item3}`}>
+            Які формати приносять гроші навіть новачкам
+          </div>
+
+          <div className={`${styles.afterItem} ${styles.item4}`}>
+            Як вийти на перші 500–1000$, а не чекати роками
+          </div>
+        </div>
+
+        <div className={styles.subButtonContainer}>
+          <button className={styles.subButton} onClick={() => setIsOpen(true)}>
+            ЗАРЕЄСТРУВАТИСЯ БЕЗКОШТОВНО
+          </button>
+        </div>
+      </div>
+    </>
   );
 }
