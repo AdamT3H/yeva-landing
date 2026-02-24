@@ -52,6 +52,25 @@ export default function Home() {
           за <span className={styles.highlight2}>2 місяці</span>
         </h1>
 
+        <div className={styles.personPhotoContainer}>
+          <div className={styles.personPhotoAtRight}>
+            <div className={styles.glowCircle}></div>
+
+            <img src="/disco-ball.png" alt="disco ball" className={styles.ball} />
+
+
+            <img src="/heart.png" alt="heart" className={styles.heart} />
+
+            <img src="/person.png" alt="person" className={styles.person} />
+          </div>
+        </div>
+
+        <div className={styles.subButtonContainer}>
+          <button className={styles.subButton} onClick={() => setIsOpen(true)}>
+            ЗАРЕЄСТРУВАТИСЯ БЕЗКОШТОВНО
+          </button>
+        </div>
+
         <div className={styles.webinarBlock}>
           <p className={styles.webinarIntro}>Цей вебінар для тебе, якщо:</p>
           <ul className={styles.webinarList}>
@@ -61,12 +80,6 @@ export default function Home() {
             <li className={styles.webinarListElem}><span className={styles.boldIntro}>ти думаєш,</span> що без великої аудиторії в контенті немає грошей</li>
             <li className={styles.webinarListElem}><span className={styles.boldIntro}>ти втомилась</span> від безкоштовних тестових і «давайте спробуємо»</li>
           </ul>
-        </div>
-
-        <div className={styles.subButtonContainer}>
-          <button className={styles.subButton} onClick={() => setIsOpen(true)}>
-            ЗАРЕЄСТРУВАТИСЯ БЕЗКОШТОВНО
-          </button>
         </div>
 
         {isOpen && (
@@ -105,7 +118,7 @@ export default function Home() {
                       newErrors.phone = "Формат: +380XXXXXXXXX або 0XXXXXXXXX";
                     }
 
-                    if (!/^@[a-zA-Z0-9_]{4,}$/.test(data.telegram)) {
+                    if (!/^@[a-zA-Z0-9_]{2,}$/.test(data.telegram)) {
                       newErrors.telegram = "Telegram має починатися з @";
                     }
 
@@ -158,19 +171,6 @@ export default function Home() {
             </div>
           </div>
         )}
-
-        <div className={styles.personPhotoContainer}>
-          <div className={styles.personPhotoAtRight}>
-            <div className={styles.glowCircle}></div>
-
-            <img src="/disco-ball.png" alt="disco ball" className={styles.ball} />
-
-
-            <img src="/heart.png" alt="heart" className={styles.heart} />
-
-            <img src="/person.png" alt="person" className={styles.person} />
-          </div>
-        </div>
       </div>
 
       <div className={styles.newBackgroundSection}>
