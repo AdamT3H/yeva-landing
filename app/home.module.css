@@ -67,9 +67,10 @@
 }
 
 .webinarIntro {
-  font-weight: 800;
+  font-weight: 600;
   font-size: 30px;
   margin-bottom: 16px;
+  font-family: var(--font-intro), sans-serif;
 }
 
 .webinarList {
@@ -186,9 +187,9 @@
 }
 
 .sectionTitle {
-  font-family: var(--font-jura), sans-serif;
+  font-family: var(--font-intro), sans-serif;
   font-size: 50px;
-  font-weight: 900;
+  font-weight: 600;
   line-height: 1.2;
   color: var(--text-color);
 }

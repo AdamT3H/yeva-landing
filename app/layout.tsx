@@ -11,7 +11,7 @@ const caveat = localFont({
 });
 
 const intro = localFont({
-  src: "../public/fonts/Intro-Regular-Alt.woff2",
+  src: "../public/fonts/Inter-VariableFont_opsz,wght.ttf",
   variable: "--font-intro",
   display: "swap",
 });
