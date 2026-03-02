@@ -1,6 +1,7 @@
 "use client";
 import styles from "../app/home.module.css";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 type FormErrors = {
   firstName?: string;
@@ -14,6 +15,8 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (isOpen) {
@@ -88,86 +91,100 @@ export default function Home() {
               <div className={styles.modal}>
                 <h2 className={styles.modalTitle}>Заповни дані</h2>
 
-                <form
-                  className={styles.form}
-                  onSubmit={async (e) => {
-                    e.preventDefault();
-                    setErrors({});
-                    setLoading(true);
+                {success && (
+                  <div className={styles.success}>
+                    Дані успішно збережені! Переходимо в Telegram...
+                  </div>
+                )}
 
-                    const formData = new FormData(e.target);
+                {!success && (
+                  <form
+                    className={styles.form}
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setErrors({});
+                      setLoading(true);
 
-                    const data = {
-                      firstName: String(formData.get("firstName") ?? "").trim(),
-                      lastName: String(formData.get("lastName") ?? "").trim(),
-                      phone: String(formData.get("phone") ?? "").trim(),
-                      telegram: String(formData.get("telegram") ?? "").trim(),
-                    };
+                      const formData = new FormData(e.target);
 
-                    const newErrors: FormErrors = {};
+                      const data = {
+                        firstName: String(formData.get("firstName") ?? "").trim(),
+                        lastName: String(formData.get("lastName") ?? "").trim(),
+                        phone: String(formData.get("phone") ?? "").trim(),
+                        telegram: String(formData.get("telegram") ?? "").trim(),
+                      };
 
-                    if (!/^[А-Яа-яA-Za-zЇїІіЄєҐґ']{2,}$/.test(data.firstName)) {
-                      newErrors.firstName = "Введіть коректне ім’я";
-                    }
+                      const newErrors: FormErrors = {};
 
-                    if (!/^[А-Яа-яA-Za-zЇїІіЄєҐґ']{2,}$/.test(data.lastName)) {
-                      newErrors.lastName = "Введіть коректне прізвище";
-                    }
-
-                    if (!/^(\+380\d{9}|0\d{9})$/.test(data.phone)) {
-                      newErrors.phone = "Формат: +380XXXXXXXXX або 0XXXXXXXXX";
-                    }
-
-                    if (!/^@[a-zA-Z0-9_]{2,}$/.test(data.telegram)) {
-                      newErrors.telegram = "Telegram має починатися з @";
-                    }
-
-                    if (Object.keys(newErrors).length > 0) {
-                      setErrors(newErrors);
-                      setLoading(false);
-                      return;
-                    }
-
-                    try {
-                      const res = await fetch("https://script.google.com/macros/s/AKfycbxgc6CVDRlKBYBlAh2IA7DQ8VAk4Jtt5QRoPAiv-6YWM16rhiDMPauwdBlKXRyo4D0qJg/exec", {
-                        method: "POST",
-                        body: JSON.stringify(data),
-                      });
-
-                      const result = await res.json();
-                      console.log(result)
-
-                      if (result.result !== "success") {
-                        throw new Error("Server error");
+                      if (!/^[А-Яа-яA-Za-zЇїІіЄєҐґ']{2,}$/.test(data.firstName)) {
+                        newErrors.firstName = "Введіть коректне ім’я";
                       }
 
-                      window.open("https://t.me/+jBOLV1GAsiE4ODYy", "_blank");
+                      if (!/^[А-Яа-яA-Za-zЇїІіЄєҐґ']{2,}$/.test(data.lastName)) {
+                        newErrors.lastName = "Введіть коректне прізвище";
+                      }
 
-                    } catch (err) {
-                      setErrors({ api: "Помилка збереження. Спробуйте ще раз." });
-                    } finally {
-                      setLoading(false);
-                    }
-                  }}
-                >
-                  <input name="firstName" placeholder="Ім’я" />
-                  {errors.firstName && <span className={styles.error}>{errors.firstName}</span>}
+                      if (!/^(\+380\d{9}|0\d{9})$/.test(data.phone)) {
+                        newErrors.phone = "Формат: +380XXXXXXXXX або 0XXXXXXXXX";
+                      }
 
-                  <input name="lastName" placeholder="Прізвище" />
-                  {errors.lastName && <span className={styles.error}>{errors.lastName}</span>}
+                      if (!/^@[a-zA-Z0-9_]{2,}$/.test(data.telegram)) {
+                        newErrors.telegram = "Telegram має починатися з @";
+                      }
 
-                  <input name="phone" placeholder="Номер телефону" />
-                  {errors.phone && <span className={styles.error}>{errors.phone}</span>}
+                      if (Object.keys(newErrors).length > 0) {
+                        setErrors(newErrors);
+                        setLoading(false);
+                        return;
+                      }
 
-                  <input name="telegram" placeholder="Telegram (@username)" />
-                  {errors.telegram && <span className={styles.error}>{errors.telegram}</span>}
+                      try {
+                        const res = await fetch("https://script.google.com/macros/s/AKfycbxgc6CVDRlKBYBlAh2IA7DQ8VAk4Jtt5QRoPAiv-6YWM16rhiDMPauwdBlKXRyo4D0qJg/exec", {
+                          method: "POST",
+                          body: JSON.stringify(data),
+                        });
 
-                  {errors.api && <span className={styles.error}>{errors.api}</span>}
+                        const result = await res.json();
+                        console.log(result)
 
-                  <button type="submit" className={styles.subButton} disabled={loading}>
-                    {loading ? "ЗБЕРЕЖЕННЯ..." : "ПЕРЕЙТИ В TELEGRAM"}
-                  </button>
-                </form>
+                        if (result.result !== "success") {
+                          throw new Error("Server error");
+                        }
+
+                        if (result.result === "success") {
+                          setSuccess(true);
+                        
+                          setTimeout(() => {
+                            router.push("https://t.me/+jBOLV1GAsiE4ODYy");
+                          }, 1000);
+                        }
+
+                      } catch (err) {
+                        setErrors({ api: "Помилка збереження. Спробуйте ще раз." });
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                  >
+                    <input name="firstName" placeholder="Ім’я" />
+                    {errors.firstName && <span className={styles.error}>{errors.firstName}</span>}
+
+                    <input name="lastName" placeholder="Прізвище" />
+                    {errors.lastName && <span className={styles.error}>{errors.lastName}</span>}
+
+                    <input name="phone" placeholder="Номер телефону" />
+                    {errors.phone && <span className={styles.error}>{errors.phone}</span>}
+
+                    <input name="telegram" placeholder="Telegram (@username)" />
+                    {errors.telegram && <span className={styles.error}>{errors.telegram}</span>}
+
+                    {errors.api && <span className={styles.error}>{errors.api}</span>}
+
+                    <button type="submit" className={styles.subButton} disabled={loading}>
+                      {loading ? "ЗБЕРЕЖЕННЯ..." : "ПЕРЕЙТИ В TELEGRAM"}
+                    </button>
+                  </form>
+                )}
 
                 <button
                   className={styles.closeBtn}

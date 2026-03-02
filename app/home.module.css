@@ -319,6 +319,13 @@
   font-size: 26px;
 }
 
+.success{
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 15px;
+  font-family: var(--font-jura);
+}
+
 .form {
   display: flex;
   flex-direction: column;
