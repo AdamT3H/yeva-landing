@@ -32,7 +32,7 @@ export default function Home() {
       <div className="container">
         <div className={styles.header}>
           <div className={styles.containerElemAtHeader}>
-            <p className={styles.textAtHeaderApper}>26 лютого</p>
+            <p className={styles.textAtHeaderApper}>18 березня</p>
             <p className={styles.textAtHeader}>Живий вебінар</p>
           </div>
 
@@ -131,13 +131,21 @@ export default function Home() {
                     try {
                       const res = await fetch("https://script.google.com/macros/s/AKfycbxgc6CVDRlKBYBlAh2IA7DQ8VAk4Jtt5QRoPAiv-6YWM16rhiDMPauwdBlKXRyo4D0qJg/exec", {
                         method: "POST",
-                        mode: "no-cors",
-                        headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(data),
                       });
 
+                      const result = await res.json();
+                      console.log(result)
+
+                      if (result.result !== "success") {
+                        throw new Error("Server error");
+                      }
+
+                      window.open("https://t.me/+jBOLV1GAsiE4ODYy", "_blank");
+
                     } catch (err) {
                       setErrors({ api: "Помилка збереження. Спробуйте ще раз." });
+                    } finally {
                       setLoading(false);
                     }
                   }}
