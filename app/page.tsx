@@ -139,25 +139,16 @@ export default function Home() {
                       }
 
                       try {
-                        const res = await fetch("https://script.google.com/macros/s/AKfycbxgc6CVDRlKBYBlAh2IA7DQ8VAk4Jtt5QRoPAiv-6YWM16rhiDMPauwdBlKXRyo4D0qJg/exec", {
+                        fetch("https://script.google.com/macros/s/AKfycbxgc6CVDRlKBYBlAh2IA7DQ8VAk4Jtt5QRoPAiv-6YWM16rhiDMPauwdBlKXRyo4D0qJg/exec", {
                           method: "POST",
                           body: JSON.stringify(data),
                         });
 
-                        const result = await res.json();
-                        console.log(result)
+                        setSuccess(true);
 
-                        if (result.result !== "success") {
-                          throw new Error("Server error");
-                        }
-
-                        if (result.result === "success") {
-                          setSuccess(true);
-                        
-                          setTimeout(() => {
-                            router.push("https://t.me/+jBOLV1GAsiE4ODYy");
-                          }, 1000);
-                        }
+                        setTimeout(() => {
+                          router.push("https://t.me/+jBOLV1GAsiE4ODYy");
+                        }, 1000);
 
                       } catch (err) {
                         setErrors({ api: "Помилка збереження. Спробуйте ще раз." });
